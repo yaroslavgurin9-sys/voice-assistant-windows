@@ -1,4 +1,3 @@
-# requirements.txt - обновлён для GUI + viz
 pyaudio==0.2.13
 numpy==1.24.3
 vosk==0.3.45
@@ -8,5 +7,5 @@ python-dotenv==1.0.0
 PyGetWindow==0.0.9
 PyMsgBox==1.0.9
 pyperclip==1.8.2
-tkinter  # Встроен в Python
-matplotlib==3.8.0  # Для будущих графиков (опционально)
+# tkinter - встроен в Python 3.8+
+# matplotlib==3.8.0  # Опционально для графиков
