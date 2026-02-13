@@ -1,372 +1,208 @@
-# Voice Assistant for Windows 11
+# Voice Assistant for Windows
 
-AI-powered voice assistant for Windows 11 with offline speech recognition, intelligent routing, and local LLM integration. Similar to Alexa/Siri but fully free, private and customizable.
+🎤 Голосовой ассистент для Windows, работающий локально на основе Vosk STT и pyttsx3 TTS.
 
-## Features
+## Возможности
 
-✨ **Core Capabilities**
-- 🎤 Offline speech recognition (STT) via Vosk
-- 🔊 Text-to-speech synthesis in Russian (pyttsx3)
-- 🎯 Wake word detection ("Ассистент", "Привет ассистент", etc.)
-- ⚡ Sub-1 second response time with local processing
-- 🧠 AI chat integration (local Ollama or cloud API)
-- 🌐 Web browser automation
-- 📱 Application launcher with custom aliases
-- 👁️ Screen analysis with OCR (Tesseract)
-- ⌨️ Mouse and keyboard automation
+✅ **Распознавание речи** - Использует Vosk для офлайн-распознавания на русском языке  
+✅ **Синтез речи** - pyttsx3 для синтеза на русском языке  
+✅ **Голосовые команды**:
+- Получение времени и даты
+- Поиск в Google
+- Поиск на YouTube
+- Открытие калькулятора и блокнота
+- Выключение/перезагрузка/блокировка ПК
+- Расширяемая система команд
 
-## Quick Start
+✅ **Обнаружение активности голоса** (VAD) - Автоматическая детекция начала и конца речи  
+✅ **Логирование** - Подробные логи всех операций  
+✅ **Консольный и GUI режимы** - Возможность запуска с интерфейсом или в консоли  
 
-### Prerequisites
-- Windows 11 with Python 3.10+
-- Microphone
-- Internet (for initial setup only)
+## Установка
 
-### Installation
+### Требования
+- Python 3.8+
+- Windows 10/11
+- Микрофон
+- 500 MB свободного места (для модели Vosk)
 
+### Шаги установки
+
+1. **Клонируем репозиторий**
 ```bash
-# Clone repository
 git clone https://github.com/yaroslavgurin9-sys/voice-assistant-windows.git
 cd voice-assistant-windows
+```
 
-# Create virtual environment
+2. **Создаем виртуальное окружение**
+```bash
 python -m venv venv
 venv\Scripts\activate
+```
 
-# Install dependencies
+3. **Устанавливаем зависимости**
+```bash
 pip install -r requirements.txt
 ```
 
-### Setup
-
-**1. Download Vosk Model**
+4. **Скачиваем модель Vosk**
 ```bash
-# Download Russian model from https://alphacephei.com/vosk/models
-# Extract to: models/vosk_models/model-ru/
+mkdir -p models/vosk_models
+cd models/vosk_models
+# Скачиваем русскую модель с https://alphacephei.com/vosk/models
+# Распаковываем в models/vosk_models/vosk-model-ru-0.42-big
+cd ../..
 ```
 
-**2. Install Tesseract OCR**
-- Download from: https://github.com/UB-Mannheim/tesseract/wiki
-- Install to: `C:\Program Files\Tesseract-OCR\`
-- Select Russian language during installation
-
-**3. Setup LLM (Choose one)**
-
-Option A: Ollama (Recommended)
+5. **Настраиваем окружение**
 ```bash
-# Download from https://ollama.ai/
-# Run: ollama run neural-chat
+copy .env.example .env
+# Отредактируйте .env по необходимости
 ```
 
-Option B: LM Studio
-- Download from https://lmstudio.ai/
-- Start server at localhost:1234
-
-### Run
-
+6. **Запускаем ассистент**
 ```bash
-# Console mode
 python main.py
+```
 
-# Or with batch file
+Или используйте быстрый запуск:
+```bash
 run.bat
 ```
 
-Say: **"Ассистент"** to activate, then give commands.
+## Использование
 
-## Usage Examples
+### Активация ассистента
+
+Скажите одно из слов-активаторов:
+- "Ассистент"
+- "Привет ассистент"
+- "Окей ассистент"
+
+### Доступные команды
+
+| Команда | Пример | Результат |
+|---------|--------|----------|
+| **time** | "сколько времени" | Произносит текущее время |
+| **date** | "какая дата" | Произносит текущую дату |
+| **google** | "гугл поиск питон" | Открывает поиск в Google |
+| **youtube** | "ютуб котики" | Поиск на YouTube |
+| **calculator** | "открой калькулятор" | Открывает калькулятор |
+| **notepad** | "откройте блокнот" | Открывает блокнот |
+| **shutdown** | "выключи компьютер" | Выключает ПК через 60 сек |
+| **restart** | "перезагрузи систему" | Перезагружает ПК через 60 сек |
+| **lock** | "заблокируй экран" | Блокирует экран |
+| **hello** | "привет" | Приветствует пользователя |
+
+## Структура проекта
 
 ```
-"Ассистент" → Activates assistant
-"Открой Chrome" → Launches Google Chrome
-"Открой YouTube" → Opens youtube.com
-"Прочитай что написано" → OCR text from active window
-"Что такое Python?" → AI answers question
-"Запусти PyCharm" → Launches IDE
-"Закрой это окно" → Closes active window
+voice-assistant-windows/
+├── main.py                    # Главный файл приложения
+├── run.bat                    # Быстрый запуск для Windows
+├── requirements.txt           # Python зависимости
+├── .env.example               # Пример конфигурации
+├── .gitignore                 # Git исключения
+├── README.md                  # Документация
+│
+├── config/
+│   ├── __init__.py
+│   └── settings.py            # Конфигурация приложения
+│
+├── core/
+│   ├── __init__.py
+│   ├── audio_input.py         # Захват аудио и VAD
+│   ├── logger.py              # Логирование
+│   ├── wake_word.py           # Обнаружение слова-активатора
+│   ├── stt_engine.py          # Speech-to-Text
+│   ├── tts_engine.py          # Text-to-Speech
+│   └── command_router.py      # Маршрутизация команд
+│
+├── ui/
+│   ├── __init__.py
+│   └── gui_main.py            # GUI интерфейс (опционально)
+│
+├── logs/                      # Директория логов
+│   ├── voice_assistant.log
+│   └── errors.log
+│
+└── models/
+    └── vosk_models/           # Vosk модели (требует скачивания)
+        └── vosk-model-ru-0.42-big/
 ```
 
-## Project Structure
+## Конфигурация
 
-```
-voice-assistant/
-├── core/                          # Main modules
-│   ├── audio_input.py            # Microphone capture
-│   ├── wake_word.py              # Wake word detection
-│   ├── stt_engine.py             # Speech recognition
-│   ├── tts_engine.py             # Text-to-speech
-│   ├── command_router.py         # Command routing
-│   ├── system_controller.py      # App/system control
-│   ├── screen_analyzer.py        # OCR and screenshots
-│   ├── ai_chat.py                # LLM integration
-│   └── logger.py                 # Logging
-│
-├── config/                        # Configuration
-│   ├── settings.py               # Main settings
-│   ├── commands.json             # Command mapping
-│   ├── apps_registry.json        # App paths
-│   ├── aliases.json              # Command aliases
-│   └── system_prompt.txt         # LLM system prompt
-│
-├── models/                        # Models and data
-│   ├── vosk_models/
-│   │   └── model-ru/
-│   └── prompts/
-│
-├── ui/                            # GUI (Optional)
-│   ├── gui_main.py
-│   └── gui_threads.py
-│
-├── logs/                          # Application logs
-├── requirements.txt               # Dependencies
-├── main.py                        # Entry point
-├── run.bat                        # Quick launcher
-└── README.md
-```
+Отредактируйте `.env` файл для изменения параметров:
 
-## Configuration
+```env
+# Параметры аудио
+AUDIO_CHUNK_SIZE=4096         # Размер аудио-блока
+AUDIO_CHANNELS=1              # Моно
+AUDIO_SAMPLE_RATE=16000       # Частота дискретизации
 
-### config/settings.py
-
-```python
-# Audio configuration
-config.audio.SAMPLE_RATE = 16000
-config.audio.CHUNK_SIZE = 4096
-
-# Vosk STT
-config.vosk.MODEL_PATH = "models/vosk_models/model-ru"
-config.vosk.TIMEOUT_SECONDS = 30.0
+# Vosk
+VOSK_MODEL_PATH=./models/vosk_models/vosk-model-ru-0.42-big
+VOSK_TIMEOUT_SECONDS=10       # Таймаут распознавания
 
 # TTS
-config.tts.RATE = 150  # Words per minute
-config.tts.VOLUME = 0.9
+TTS_RATE=150                  # Скорость речи (слов/мин)
+TTS_VOLUME=0.9                # Громкость (0-1)
 
-# Wake words
-config.wake_word.WAKE_WORDS = ["ассистент", "привет ассистент", "окей ассистент"]
-
-# AI Settings
-config.ai.USE_LOCAL_MODEL = True
-config.ai.LOCAL_MODEL_TYPE = "ollama"
-config.ai.OLLAMA_MODEL = "neural-chat"
-config.ai.OLLAMA_API_URL = "http://localhost:11434/api/generate"
+# Логирование
+LOG_LEVEL=INFO                # DEBUG, INFO, WARNING, ERROR
 ```
 
-### Custom Commands
+## Добавление новых команд
 
-Edit `config/commands.json` to add command mappings:
+### 1. Добавьте метод в `CommandRouter`:
 
-```json
-{
-  "app_launcher": {
-    "keywords": ["открой", "запусти"],
-    "apps": [
-      {"name": "chrome", "aliases": ["хром", "браузер"]}
-    ]
-  }
+```python
+def _cmd_mycommand(self, text: str) -> str:
+    """My custom command"""
+    return "Результат команды"
+```
+
+### 2. Зарегистрируйте в конструкторе:
+
+```python
+self.commands = {
+    # ... существующие команды
+    'mycommand': self._cmd_mycommand,
 }
 ```
 
-## Architecture
+## Требования
 
-```
-Audio Input (Microphone)
-        ↓
-Wake Word Detector ("Ассистент")
-        ↓
-Speech Recognition (Vosk STT)
-        ↓
-Command Router (Pattern Matching)
-        ↓
-┌───────┴────────┬─────────────┐
-│                │             │
-▼                ▼             ▼
-System          Screen        AI Chat
-Controller      Analyzer      Module
-(Apps/Web)      (OCR/Click)    (LLM)
-        │                │             │
-        └────────┬───────┴─────────────┘
-                 │
-                 ▼
-        Text-to-Speech (pyttsx3)
-                 │
-                 ▼
-        Speaker/Audio Output
-```
+- Python 3.8+
+- pyaudio (требует Visual C++ Build Tools)
+- numpy
+- vosk
+- pyttsx3
+- python-dotenv
 
-## Technology Stack
-
-| Component | Technology | Notes |
-|-----------|-----------|-------|
-| STT | Vosk | Offline, Russian support |
-| TTS | pyttsx3 | Offline, local voices |
-| LLM | Ollama/LM Studio | Local or cloud API |
-| OCR | Tesseract | Open source |
-| Audio | sounddevice | Cross-platform |
-| Automation | pyautogui | Screen/keyboard control |
-| GUI | PyQt6 | Optional |
-| Framework | Python 3.10+ | Async/threading |
-
-## Troubleshooting
-
-### Vosk model not found
-```
-→ Download from https://alphacephei.com/vosk/models
-→ Extract model-ru to models/vosk_models/model-ru/
-```
-
-### PyAudio won't install
+Для установки pyaudio на Windows может потребоваться:
 ```bash
 pip install pipwin
 pipwin install pyaudio
 ```
 
-### Microphone not working
-```python
-import sounddevice as sd
-print(sd.query_devices())  # Find your device index
-# Update config.audio.MIC_DEVICE_INDEX
-```
+## Известные проблемы
 
-### LLM not responding
-- Check Ollama is running: `ollama run neural-chat`
-- Verify API at http://localhost:11434/api/tags
-- Check config.ai.OLLAMA_API_URL
+1. **pyaudio не устанавливается** - Требует Visual C++ Build Tools
+2. **Русский язык в консоли** - Используйте UTF-8 кодировку
+3. **Тихая микрофон** - Проверьте громкость в параметрах аудио Windows
 
-### Tesseract not found
-```
-→ Install to C:\Program Files\Tesseract-OCR\
-→ Update config.screen.TESSERACT_PATH
-```
+## Лицензия
 
-## Performance Optimization
+MIT License - смотри LICENSE файл
 
-- **Wake word detection**: Always-on, low CPU usage
-- **STT latency**: <500ms with local Vosk
-- **Command execution**: Threaded to avoid blocking
-- **LLM response**: Async streaming for smooth UX
-- **Logging**: Async file I/O
+## Автор
 
-## Security & Privacy
+**Ярослав Гурин** - [GitHub](https://github.com/yaroslavgurin9-sys)
 
-✅ All processing is local (no cloud required)
-✅ No data sent to external services by default
-✅ Custom LLM models can be run completely offline
-✅ Supports encrypted API keys for optional cloud services
+## Благодарности
 
-## Extending
-
-### Add New Command
-
-```python
-# In core/command_router.py
-def _handle_custom_action(self, text: str) -> str:
-    if 'take screenshot' in text:
-        self.screen_analyzer.take_screenshot('screenshot.png')
-        return "Screenshot saved"
-    return "Unknown command"
-```
-
-### Add Application
-
-Edit `config/apps_registry.json`:
-```json
-{
-  "telegram": "C:\\Users\\Name\\AppData\\Local\\Telegram\\Telegram.exe"
-}
-```
-
-### Add Wake Word
-
-Edit `config/settings.py`:
-```python
-config.wake_word.WAKE_WORDS = [
-    "ассистент",
-    "привет ассистент",
-    "окей ассистент",
-    "привет",  # New wake word
-]
-```
-
-## Logging
-
-Logs are saved to `logs/assistant.log` with:
-- Timestamp
-- Recognized text
-- Command type
-- Execution result
-
-```python
-from core.logger import app_logger
-app_logger.info("Custom message")
-```
-
-## Advanced Usage
-
-### Remote API Integration
-
-```python
-# Use cloud API instead of local LLM
-config.ai.USE_LOCAL_MODEL = False
-config.ai.USE_CLOUD_API = True
-config.ai.CLOUD_API_TYPE = "openai"
-config.ai.CLOUD_API_KEY = "sk-..."
-```
-
-### Multiple LLM Models
-
-```python
-# Switch between models
-config.ai.OLLAMA_MODEL = "mistral"  # Fast
-config.ai.OLLAMA_MODEL = "neural-chat"  # Better quality
-```
-
-### Enable GUI
-
-```python
-# In main.py
-assistant = VoiceAssistant(enable_gui=True)
-assistant.start()
-```
-
-## Contributing
-
-Feel free to fork, modify, and submit pull requests!
-
-## License
-
-MIT License - Free for personal and commercial use
-
-## Author
-
-Created as a comprehensive voice assistant framework for Windows 11.
-
-## Support
-
-For issues, questions, or suggestions:
-1. Check existing issues on GitHub
-2. Review logs in `logs/assistant.log`
-3. Open a new issue with:
-   - Windows version
-   - Python version
-   - Error logs
-   - Reproduction steps
-
-## Roadmap
-
-- [ ] GUI dashboard with command history
-- [ ] Global hotkeys for quick access
-- [ ] Multi-language support (English, Spanish, etc.)
-- [ ] Skill plugins system
-- [ ] Database for persistent context
-- [ ] Integration with weather/news APIs
-- [ ] Desktop notifications
-- [ ] Command scheduling
-- [ ] Voice recording and playback
-- [ ] Advanced NLP for better intent detection
-
----
-
-**Status**: Active Development
-**Last Updated**: February 2026
-**Python**: 3.10+
-**OS**: Windows 11
+- [Vosk](https://alphacephei.com/vosk/) - Offline speech recognition
+- [pyttsx3](https://github.com/nateshmbhat/pyttsx3) - Text-to-speech
+- [PyAudio](https://people.csail.mit.edu/hubert/pyaudio/) - Audio I/O
