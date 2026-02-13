@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from dotenv import load_dotenv
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 load_dotenv()
 
@@ -43,12 +43,12 @@ class LoggingConfig:
 
 @dataclass
 class Config:
-    audio: AudioConfig = AudioConfig()
-    vosk: VoskConfig = VoskConfig()
-    tts: TTSConfig = TTSConfig()
-    vad: VADConfig = VADConfig()
-    gui: GUIConfig = GUIConfig()
-    logging: LoggingConfig = LoggingConfig()
+    audio: AudioConfig = field(default_factory=AudioConfig)
+    vosk: VoskConfig = field(default_factory=VoskConfig)
+    tts: TTSConfig = field(default_factory=TTSConfig)
+    vad: VADConfig = field(default_factory=VADConfig)
+    gui: GUIConfig = field(default_factory=GUIConfig)
+    logging: LoggingConfig = field(default_factory=LoggingConfig)
 
 config = Config()
 
