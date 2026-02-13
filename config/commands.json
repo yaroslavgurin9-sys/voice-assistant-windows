@@ -1,0 +1,25 @@
+{
+  "app_launcher": {
+    "keywords": ["открой", "запусти", "включи", "run", "launch", "open"],
+    "apps": [
+      {"name": "chrome", "aliases": ["хром", "браузер"]},
+      {"name": "firefox", "aliases": ["фаерфокс"]},
+      {"name": "pycharm", "aliases": ["пайчарм", "питон"]},
+      {"name": "notepad", "aliases": ["блокнот"]}
+    ]
+  },
+  "web_browser": {
+    "keywords": ["открой сайт", "перейди", "гугл", "youtube"],
+    "sites": [
+      {"name": "youtube", "url": "https://youtube.com"},
+      {"name": "github", "url": "https://github.com"},
+      {"name": "google", "url": "https://google.com"}
+    ]
+  },
+  "screen_analysis": {
+    "keywords": ["прочитай", "что написано", "распознай", "ocr", "экран"]
+  },
+  "system_control": {
+    "keywords": ["закрой", "выключи", "минимизируй", "перезагружи"]
+  }
+}
